@@ -9,7 +9,57 @@ import com.example.firebasepam.Model.Mahasiswa
 import com.example.firebasepam.repository.MahasiswaRepository
 import kotlinx.coroutines.launch
 
+class InsertViewModel(
+    private val mhs: MahasiswaRepository
+): ViewModel() {
+    var uiEvent: InsertUiState by mutableStateOf(InsertUiState())
+        private set
+    var uiState: FormState by mutableStateOf(FormState.Idle)
+        private set
 
+    fun UpdateState(mahasiswaEvent: MahasiswaEvent){
+        uiEvent = uiEvent.copy(
+            insertUiEvent = mahasiswaEvent,
+        )
+    }
+    fun validateFields(): Boolean {
+        val event = uiEvent.insertUiEvent
+        val errorState = FormErrorState(
+            nim = if (event.nim.isNotEmpty()) null else "NIM tidak Boleh Kosong",
+            nama = if (event.nama.isNotEmpty()) null else "Nama tidak Boleh Kosong",
+            jeniskelamin = if (event.jeniskelamin.isNotEmpty()) null else "Jenis Kelamin tidak Boleh Kosong",
+            alamat = if (event.alamat.isNotEmpty()) null else "Alamat tidak Boleh Kosong",
+            kelas = if (event.kelas.isNotEmpty()) null else "Kelas tidak Boleh Kosong",
+            angkatan = if (event.angkatan.isNotEmpty()) null else "Angkatan tidak Boleh Kosong"
+        )
+        uiEvent = uiEvent.copy(isEntryValid = errorState)
+        return errorState.isValid()
+    }
+
+    fun insertMhs() {
+        if (validateFields()) {
+            viewModelScope.launch {
+                uiState = FormState.Loading
+                try {
+                    mhs.insertMahasiswa(uiEvent.insertUiEvent.toMhsModel())
+                    uiState = FormState.Success("Data Mahasiswa Berhasil Ditambahkan")
+                } catch (e: Exception) {
+                    uiState = FormState.Error("Data Mahasiswa Gagal Ditambahkan")
+                }
+            }
+        } else {
+            uiState = FormState.Error("Data tidak Valid")
+        }
+    }
+    fun resetForm() {
+        uiEvent = InsertUiState()
+        uiState = FormState.Idle
+    }
+
+    fun resetSnackBarMessage() {
+        uiState = FormState.Idle
+    }
+}
 
 sealed class FormState{
     object Idle : FormState()
