@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.firebasepam.ui.Navigation.PengelolaHalaman
 import com.example.firebasepam.ui.theme.FirebasePAMTheme
 import com.example.firebasepam.ui.view.HomeScreen
 
@@ -21,11 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             FirebasePAMTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                   HomeScreen(
-                       navigateToItemEntry = {},
-                       modifier = Modifier.padding(innerPadding),
-                       onDetailClick = {}
-                   )
+                   PengelolaHalaman(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
