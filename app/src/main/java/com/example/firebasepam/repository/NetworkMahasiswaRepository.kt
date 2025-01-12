@@ -6,6 +6,7 @@ import com.google.firebase.firestore.Query
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
 
 class NetworkMahasiswaRepository (
     private val firestore: FirebaseFirestore
@@ -26,19 +27,18 @@ class NetworkMahasiswaRepository (
         }
     }
 
-    override suspend fun getMahasiswaBynim(nim: String): Flow<Mahasiswa> {
-        TODO("Not yet implemented")
+    override suspend fun getMahasiswaBynim(nim: String): Flow<Mahasiswa> = callbackFlow {
+        val mhsDocument = firestore.collection("Mahasiswa").document(nim)
+            .addSnapshotListener { value, error ->
+                if (value != null) {
+                    val mhs = value.toObject(Mahasiswa::class.java)!!
+                    trySend(mhs)
+                }
+            }
+        awaitClose {
+            mhsDocument.remove()
+        }
     }
 
-    override suspend fun insertMahasiswa(mahasiswa: Mahasiswa) {
-        TODO("Not yet implemented")
-    }
 
-    override suspend fun updateMahasiswa(nim: String, mahasiswa: Mahasiswa) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun deleteMahasiswa(nim: String) {
-        TODO("Not yet implemented")
-    }
 }
