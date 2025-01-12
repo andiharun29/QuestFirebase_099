@@ -45,7 +45,80 @@ import com.example.firebasepam.ui.viewmodel.PenyediaViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun InsertMhsView (
+    onBack: () -> Unit,
+    onNavigate: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: InsertViewModel = viewModel(factory = PenyediaViewModel.Factory)
+) {
 
+    val uiState = viewModel.uiState // State Utama Untuk Loading, Success, Error
+    val uiEvent = viewModel.uiEvent // State Untuk Form Dan Validasi
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
+    //Observasi Perubahan State Untuk Snackbar Dan Navigasi
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is FormState.Success -> {
+                println(
+                    "InsertMhsView: uiState is FormState.Success, Navigate to Home" + uiState.message
+                )
+
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(uiState.message)
+                }
+                delay(700)
+                onNavigate()
+                viewModel.resetSnackBarMessage()
+            }
+            is FormState.Error -> {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(uiState.message)
+                }
+            }
+            else -> Unit
+        }
+    }
+
+    Scaffold (
+        modifier = modifier,
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Tambah Mahasiswa") },
+                navigationIcon = {
+                    Button(onClick = onBack) {
+                        Text(text = "Back")
+                    }
+                }
+            )
+        }
+    ){
+            padding ->
+        Column (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp),
+        ){
+            InsertBodyMhs(
+                uiState = uiEvent,
+                homeUiState = uiState,
+                onValueChange = { updatedEvent ->
+                    viewModel.UpdateState(updatedEvent)
+                },
+                onClick = {
+                    if (viewModel.validateFields()) {
+                        viewModel.insertMhs()
+                    }
+                }
+            )
+        }
+    }
+}
 
 @Composable
 fun InsertBodyMhs (
