@@ -10,6 +10,12 @@ import com.example.firebasepam.repository.MahasiswaRepository
 import kotlinx.coroutines.launch
 
 
+
+data class InsertUiState(
+    val insertUiEvent: MahasiswaEvent = MahasiswaEvent(),
+    val isEntryValid: FormErrorState = FormErrorState(),
+)
+
 data class FormErrorState(
     val nim: String? = null,
     val nama: String? = null,
