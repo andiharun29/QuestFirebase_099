@@ -203,7 +203,7 @@ fun MhsCard(
                 )
             }
             Text(
-                text = mahasiswa.kelas,
+                text = mahasiswa.judulskripsi,
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(

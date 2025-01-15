@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val mhs: MahasiswaRepository): ViewModel() {
+class HomeViewModel(private val mhs: MahasiswaRepository) : ViewModel() {
     var mhsUiState: HomeUiState by mutableStateOf(HomeUiState.Loading)
         private set
 
@@ -22,34 +22,33 @@ class HomeViewModel(private val mhs: MahasiswaRepository): ViewModel() {
     fun getMhs() {
         viewModelScope.launch {
             mhs.getMahasiswa().onStart {
-                    mhsUiState = HomeUiState.Loading
+                mhsUiState = HomeUiState.Loading
             }
                 .catch {
                     mhsUiState = HomeUiState.Error(it)
-            }
-                .collect{
-                    mhsUiState = if (it.isEmpty()){
+                }
+                .collect {
+                    mhsUiState = if (it.isEmpty()) {
                         HomeUiState.Error(Exception("Data Mahasiswa Kosong"))
-                    }
-                    else{
+                    } else {
                         HomeUiState.Success(it)
                     }
                 }
         }
     }
 
-    fun deleteMhs(mahasiswa: Mahasiswa){
+    fun deleteMhs(mahasiswa: Mahasiswa) {
         viewModelScope.launch {
             try {
                 mhs.deleteMahasiswa(mahasiswa)
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 mhsUiState = HomeUiState.Error(e)
             }
         }
     }
 }
 
-sealed class HomeUiState{
+sealed class HomeUiState {
     data class Success(val mahasiswa: List<Mahasiswa>) : HomeUiState()
     data class Error(val message: Throwable) : HomeUiState()
     object Loading : HomeUiState()

@@ -14,7 +14,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -174,7 +176,6 @@ fun FormMahasiswa(
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
-
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = mahasiswaEvent.nama,
@@ -193,7 +194,6 @@ fun FormMahasiswa(
             text = errorState.nama ?: "",
             color = Color.Red
         )
-
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = mahasiswaEvent.nim,
@@ -213,8 +213,6 @@ fun FormMahasiswa(
             text = errorState.nim ?: "",
             color = Color.Red
         )
-
-        Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Jenis Kelamin")
         Row (
             modifier = Modifier.fillMaxWidth()
@@ -238,7 +236,6 @@ fun FormMahasiswa(
             text = errorState.jeniskelamin ?: "",
             color = Color.Red
         )
-
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = mahasiswaEvent.alamat,
@@ -258,7 +255,6 @@ fun FormMahasiswa(
             color = Color.Red
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Kelas")
         Row (
             modifier = Modifier.fillMaxWidth()
@@ -282,7 +278,6 @@ fun FormMahasiswa(
             text = errorState.kelas ?: "",
             color = Color.Red
         )
-
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = mahasiswaEvent.angkatan,
@@ -300,6 +295,60 @@ fun FormMahasiswa(
         )
         Text(
             text = errorState.angkatan ?: "",
+            color = Color.Red
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = mahasiswaEvent.judulskripsi,
+            onValueChange = { onValueChange(mahasiswaEvent.copy(judulskripsi = it)) },
+            label = { Text(text = "Judul Skripsi") },
+            isError = errorState.angkatan != null,
+            placeholder = { Text(text = "Masukkan Judul Skripsi") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.MailOutline,
+                    contentDescription = "Person Icon"
+                )
+            }
+        )
+        Text(
+            text = errorState.judulskripsi ?: "",
+            color = Color.Red
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = mahasiswaEvent.dosen1,
+            onValueChange = { onValueChange(mahasiswaEvent.copy(dosen1 = it)) },
+            label = { Text(text = "Dosen Pembimbing 1") },
+            isError = errorState.angkatan != null,
+            placeholder = { Text(text = "Masukkan Dosen Pembimbing 1") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = "Person Icon"
+                )
+            }
+        )
+        Text(
+            text = errorState.dosen1 ?: "",
+            color = Color.Red
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = mahasiswaEvent.dosen2,
+            onValueChange = { onValueChange(mahasiswaEvent.copy(dosen2 = it)) },
+            label = { Text(text = "Dosen Pembimbing 2") },
+            isError = errorState.angkatan != null,
+            placeholder = { Text(text = "Masukkan Dosen Pembimbing 2") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = "Person Icon"
+                )
+            }
+        )
+        Text(
+            text = errorState.dosen2 ?: "",
             color = Color.Red
         )
     }

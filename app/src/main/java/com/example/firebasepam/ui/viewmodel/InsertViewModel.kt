@@ -11,17 +11,18 @@ import kotlinx.coroutines.launch
 
 class InsertViewModel(
     private val mhs: MahasiswaRepository
-): ViewModel() {
+) : ViewModel() {
     var uiEvent: InsertUiState by mutableStateOf(InsertUiState())
         private set
     var uiState: FormState by mutableStateOf(FormState.Idle)
         private set
 
-    fun UpdateState(mahasiswaEvent: MahasiswaEvent){
+    fun UpdateState(mahasiswaEvent: MahasiswaEvent) {
         uiEvent = uiEvent.copy(
             insertUiEvent = mahasiswaEvent,
         )
     }
+
     fun validateFields(): Boolean {
         val event = uiEvent.insertUiEvent
         val errorState = FormErrorState(
@@ -30,7 +31,10 @@ class InsertViewModel(
             jeniskelamin = if (event.jeniskelamin.isNotEmpty()) null else "Jenis Kelamin tidak Boleh Kosong",
             alamat = if (event.alamat.isNotEmpty()) null else "Alamat tidak Boleh Kosong",
             kelas = if (event.kelas.isNotEmpty()) null else "Kelas tidak Boleh Kosong",
-            angkatan = if (event.angkatan.isNotEmpty()) null else "Angkatan tidak Boleh Kosong"
+            angkatan = if (event.angkatan.isNotEmpty()) null else "Angkatan tidak Boleh Kosong",
+            judulskripsi = if (event.judulskripsi.isNotEmpty()) null else "Judul Skripsi tidak Boleh Kosong",
+            dosen1 = if (event.dosen1.isNotEmpty()) null else "Dosen 1 tidak Boleh Kosong",
+            dosen2 = if (event.dosen2.isNotEmpty()) null else "Dosen 2 tidak Boleh Kosong"
         )
         uiEvent = uiEvent.copy(isEntryValid = errorState)
         return errorState.isValid()
@@ -51,6 +55,7 @@ class InsertViewModel(
             uiState = FormState.Error("Data tidak Valid")
         }
     }
+
     fun resetForm() {
         uiEvent = InsertUiState()
         uiState = FormState.Idle
@@ -61,7 +66,7 @@ class InsertViewModel(
     }
 }
 
-sealed class FormState{
+sealed class FormState {
     object Idle : FormState()
     object Loading : FormState()
     data class Success(val message: String) : FormState()
@@ -79,11 +84,15 @@ data class FormErrorState(
     val jeniskelamin: String? = null,
     val alamat: String? = null,
     val kelas: String? = null,
-    val angkatan: String? = null
+    val angkatan: String? = null,
+    val judulskripsi: String? = null,
+    val dosen1: String? = null,
+    val dosen2: String? = null
 ) {
     fun isValid(): Boolean {
         return nim != null && nama != null && jeniskelamin != null
                 && alamat != null && kelas != null && angkatan != null
+                && judulskripsi != null && dosen1 != null && dosen2 != null
     }
 }
 
@@ -93,14 +102,21 @@ data class MahasiswaEvent(
     val jeniskelamin: String = "",
     val alamat: String = "",
     val kelas: String = "",
-    val angkatan: String = ""
+    val angkatan: String = "",
+    val judulskripsi: String = "",
+    val dosen1: String = "",
+    val dosen2: String = ""
 )
 
-fun MahasiswaEvent.toMhsModel() : Mahasiswa = Mahasiswa(
+fun MahasiswaEvent.toMhsModel(): Mahasiswa = Mahasiswa(
     nim = nim,
     nama = nama,
     jeniskelamin = jeniskelamin,
     alamat = alamat,
     kelas = kelas,
-    angkatan = angkatan
+    angkatan = angkatan,
+    judulskripsi = "",
+    dosen1 = "",
+    dosen2 = ""
+
 )

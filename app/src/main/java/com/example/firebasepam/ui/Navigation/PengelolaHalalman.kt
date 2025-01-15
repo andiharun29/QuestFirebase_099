@@ -35,5 +35,13 @@ fun PengelolaHalaman(
                 }
             )
         }
+//        composable(DestinasiDetail.route) {
+//            DetailScreen(
+//                nim = it.arguments?.getString("nim") ?: "",
+//                onBackClick = {
+//                    navController.navigate(DestinasiHome.route)
+//                }
+//            )
+//        }
     }
 }
