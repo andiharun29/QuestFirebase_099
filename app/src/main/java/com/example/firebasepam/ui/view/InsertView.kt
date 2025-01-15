@@ -136,12 +136,6 @@ fun InsertBodyMhs (
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        FormMahasiswa(
-            mahasiswaEvent = uiState.insertUiEvent,
-            onValueChange = onValueChange,
-            errorState = uiState.isEntryValid,
-            modifier = modifier.fillMaxWidth()
-        )
         Button(
             onClick = onClick,
             modifier = Modifier.fillMaxWidth(),
@@ -159,6 +153,12 @@ fun InsertBodyMhs (
                 Text("Add")
             }
         }
+        FormMahasiswa(
+            mahasiswaEvent = uiState.insertUiEvent,
+            onValueChange = onValueChange,
+            errorState = uiState.isEntryValid,
+            modifier = modifier.fillMaxWidth()
+        )
     }
 }
 
